@@ -9,19 +9,25 @@ set(LIBRARY_TYPE SHARED)
 
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
-        "src/*.cpp"
+        "src/Miriya/*.cpp"
         "src/*.cc"
         "src/*.cxx"
+        "src/*.cpp"
+         "${CMAKE_SOURCE_DIR}/Sandbox/src/Sandbox.cpp"
 )
 
 file(GLOB_RECURSE MIRIYA_HEADERS
-        "include/*.h"
+        "src/Miriya/*.h"
+        "include/Miriya.h"
         "include/*.hpp"
         "include/*.hxx"
 )
 
 # Create the dynamic library
 add_library(Miriya ${LIBRARY_TYPE} ${MIRIYA_SOURCES} ${MIRIYA_HEADERS})
+
+add_compile_definitions(MIR_PLATFORM_WINDOWS)
+add_compile_definitions(MIR_BUILD_DLL)
 
 # Set include directories
 target_include_directories(Miriya
