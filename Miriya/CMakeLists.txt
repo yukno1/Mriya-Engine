@@ -1,0 +1,99 @@
+cmake_minimum_required(VERSION 3.20)
+project(Miriya)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Define the library type (SHARED creates a dynamic library)
+set(LIBRARY_TYPE SHARED)
+
+# Collect source files
+file(GLOB_RECURSE MIRIYA_SOURCES
+        "src/*.cpp"
+        "src/*.cc"
+        "src/*.cxx"
+)
+
+file(GLOB_RECURSE MIRIYA_HEADERS
+        "include/*.h"
+        "include/*.hpp"
+        "include/*.hxx"
+)
+
+# Create the dynamic library
+add_library(Miriya ${LIBRARY_TYPE} ${MIRIYA_SOURCES} ${MIRIYA_HEADERS})
+
+# Set include directories
+target_include_directories(Miriya
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+# Set compile features
+target_compile_features(Miriya PUBLIC cxx_std_20)
+
+# Set properties for the library
+set_target_properties(Miriya PROPERTIES
+        VERSION 1.0.0
+        SOVERSION 1
+)
+
+# MSVC-specific options
+if(MSVC)
+    target_compile_options(Miriya PRIVATE /W4)
+endif()
+
+
+#message("IncludeDir_VulkanSDK: ${IncludeDir_VulkanSDK}")
+#
+#target_link_libraries(${PROJECT_NAME} PRIVATE
+#        box2d
+#        glfw
+#        glad
+#        imgui
+#        yaml-cpp
+#        opengl32.lib
+#        # ${Library_mono}
+#)
+#
+#if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+#    target_link_libraries(${PROJECT_NAME} PRIVATE
+#            ${Library_WinSock}
+#            ${Library_WinMM}
+#            ${Library_WinVersion}
+#            ${Library_BCrypt}
+#    )
+#endif()
+
+#target_compile_options(${PROJECT_NAME} PRIVATE
+#        $<$<COMPILE_LANGUAGE:CXX>:/EHsc>
+#)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
+#    target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
+#    target_link_libraries(${PROJECT_NAME} PRIVATE
+#            ${Library_ShaderC_Debug}
+#            ${Library_SPIRV_Cross_Debug}
+#            ${Library_SPIRV_Cross_GLSL_Debug}
+#    )
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
+#    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+#    target_link_libraries(${PROJECT_NAME} PRIVATE
+#            ${Library_ShaderC_Release}
+#            ${Library_SPIRV_Cross_Release}
+#            ${Library_SPIRV_Cross_GLSL_Release}
+#    )
+elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
+#    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+#    target_link_libraries(${PROJECT_NAME} PRIVATE
+#            ${Library_ShaderC_Release}
+#            ${Library_SPIRV_Cross_Release}
+#            ${Library_SPIRV_Cross_GLSL_Release}
+#    )
+endif()
