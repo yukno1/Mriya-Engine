@@ -10,17 +10,18 @@ set(LIBRARY_TYPE SHARED)
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
         "src/Miriya/*.cpp"
-        "src/*.cc"
-        "src/*.cxx"
-        "src/*.cpp"
          "${CMAKE_SOURCE_DIR}/Sandbox/src/Sandbox.cpp"
+#        "vendor/stb_image/*.cpp"
+#        "vendor/glm/glm/*.inl"
+#        "vendor/ImGuizmo/ImGuizmo.cpp"
 )
 
 file(GLOB_RECURSE MIRIYA_HEADERS
         "src/Miriya/*.h"
-        "include/Miriya.h"
-        "include/*.hpp"
-        "include/*.hxx"
+        "include/*.h"
+#        "vendor/stb_image/*.h"
+#        "vendor/glm/glm/*.hpp"
+#        "vendor/ImGuizmo/ImGuizmo.h"
 )
 
 # Create the dynamic library
@@ -36,6 +37,7 @@ target_include_directories(Miriya
         $<INSTALL_INTERFACE:include>
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/Miriya/vendor/spdlog/include
 )
 
 # Set compile features
