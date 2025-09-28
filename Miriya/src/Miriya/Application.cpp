@@ -1,3 +1,4 @@
+#include "mirpch.h"
 #include "Miriya/Application.h"
 
 #include "Miriya/Events/ApplicationEvent.h"
@@ -10,7 +11,12 @@ namespace Miriya {
 
     void Application::Run() {
         WindowResizeEvent e(1200, 720);
-        MIR_TRACE("{}", e.ToString());
+        if (e.IsInCategory(EventCategoryApplication)) {
+            MIR_TRACE(e.ToString());
+        }
+        if (e.IsInCategory(EventCategoryInput)) {
+            MIR_TRACE(e.ToString());
+        }
 
         while (true);
     }

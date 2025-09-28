@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Miriya {
     class MIR_API KeyEvent : public Event {
     public:

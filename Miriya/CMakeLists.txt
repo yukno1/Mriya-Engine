@@ -3,10 +3,17 @@ project(Miriya)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+#option(BOX2D_BUILD_UNIT_TESTS "Build the Box2D unit tests" OFF)
+#option(BOX2D_BUILD_TESTBED "Build the Box2D testbed" OFF)
+#option(BOX2D_BUILD_DOCS "Build the Box2D documentation" OFF)
+#option(BOX2D_USER_SETTINGS "Override Box2D settings with b2UserSettings.h" OFF)
+#option(BUILD_SHARED_LIBS "Build Box2D as a shared library" ON)
 
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
-        "src/Miriya/*.cpp"
+        "src/*.cpp"
 #         "${CMAKE_SOURCE_DIR}/Sandbox/src/Sandbox.cpp"
 #        "vendor/stb_image/*.cpp"
 #        "vendor/glm/glm/*.inl"
@@ -14,9 +21,9 @@ file(GLOB_RECURSE MIRIYA_SOURCES
 )
 
 file(GLOB_RECURSE MIRIYA_HEADERS
-        "src/Miriya/*.h"
+        "src/*.h"
+        "src/Events/*h"
         "include/*.h"
-        "src/Miriya/Events/*.h"
 #        "vendor/stb_image/*.h"
 #        "vendor/glm/glm/*.hpp"
 #        "vendor/ImGuizmo/ImGuizmo.h"
@@ -25,8 +32,15 @@ file(GLOB_RECURSE MIRIYA_HEADERS
 # Create the dynamic library
 add_library(Miriya SHARED ${MIRIYA_SOURCES} ${MIRIYA_HEADERS})
 
+target_precompile_headers(${PROJECT_NAME} PUBLIC "src/mirpch.h")
+
 add_compile_definitions(MIR_PLATFORM_WINDOWS)
 add_compile_definitions(MIR_BUILD_DLL)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        _CRT_SECURE_NO_WARNINGS
+        GLFW_INCLUDE_NONE
+)
 
 # Set include directories
 #target_include_directories(Miriya
@@ -67,14 +81,14 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 #        # ${Library_mono}
 #)
 #
-#if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_WinSock}
-#            ${Library_WinMM}
-#            ${Library_WinVersion}
-#            ${Library_BCrypt}
-#    )
-#endif()
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            ${Library_WinSock}
+            ${Library_WinMM}
+            ${Library_WinVersion}
+            ${Library_BCrypt}
+    )
+endif()
 
 #target_compile_options(${PROJECT_NAME} PRIVATE
 #        $<$<COMPILE_LANGUAGE:CXX>:/EHsc>

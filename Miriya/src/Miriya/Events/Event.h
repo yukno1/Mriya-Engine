@@ -1,9 +1,7 @@
 #pragma once
 
+// #include <mirpch.h>
 #include "Miriya/Core.h"
-
-#include <string>
-#include <functional>
 
 namespace Miriya {
     // Events in Hazel are currently blocking, meaning when an event occurs it
