@@ -1,0 +1,50 @@
+#pragma once
+
+#include "Event.h"
+
+#include <sstream>
+
+namespace Miriya {
+    class MIR_API KeyEvent : public Event {
+    public:
+        inline int GetKeyCode() const {return m_Keycode;}
+
+        EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+    protected:
+        KeyEvent(int keycode) : m_Keycode(keycode) {}
+
+        int m_Keycode;
+    };
+
+
+    class MIR_API KeyPressedEvent : public KeyEvent {
+    public:
+        KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
+
+        inline int GetRepeatCount() const {return m_RepeatCount;}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "KeyPressEvent: " << m_Keycode << "(" << m_RepeatCount << " repeates)";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(KeyPressed)
+    private:
+        int m_RepeatCount;
+    };
+
+
+    class MIR_API KeyReleasedEvent : public KeyEvent {
+    public:
+        explicit KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "KeyReleasedEvent: " << m_Keycode;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(KeyReleased)
+    };
+}

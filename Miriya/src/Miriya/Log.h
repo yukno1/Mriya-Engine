@@ -1,8 +1,9 @@
 #pragma once
 
 #include <memory>
-#include "Core.h"
+#include "Miriya/Core.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace Miriya {
     class MIR_API Log {
@@ -16,7 +17,7 @@ namespace Miriya {
         static std::shared_ptr<spdlog::logger> s_CoreLogger;
         static std::shared_ptr<spdlog::logger> s_ClientLogger;
     };
-} // Miriya
+}
 
 // Core log macros
 #define MIR_CORE_ERROR(...)    ::Miriya::Log::GetCoreLogger()->error(__VA_ARGS__)
