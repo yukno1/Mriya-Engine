@@ -54,10 +54,11 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME} PRIVATE
         src
         vendor/spdlog/include
+        vendor/GLFW/include
+        vendor/GLEW/include
 #        ${IncludeDir_Box2D}
 #        ${IncludeDir_filewatch}
-#        ${IncludeDir_GLFW}
-#        ${IncludeDir_Glad}
+#        ${IncludeDir_Glad}up
 #        ${IncludeDir_ImGui}
 #        ${IncludeDir_glm}
 #        ${IncludeDir_stb_image}
@@ -72,21 +73,22 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 #message("IncludeDir_VulkanSDK: ${IncludeDir_VulkanSDK}")
 #
 #target_link_libraries(${PROJECT_NAME} PRIVATE
-#        box2d
-#        glfw
-#        glad
-#        imgui
-#        yaml-cpp
-#        opengl32.lib
-#        # ${Library_mono}
+        #box2d
+        #glad
+        #imgui
+        #yaml-cpp
+        #opengl32.lib
+        # ${Library_mono}
 #)
-#
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${Library_WinSock}
-            ${Library_WinMM}
-            ${Library_WinVersion}
-            ${Library_BCrypt}
+#            ${Library_WinSock}
+#            ${Library_WinMM}
+#            ${Library_WinVersion}
+#            ${Library_BCrypt}
+#            opengl32.lib
+            ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
     )
 endif()
 
