@@ -2,10 +2,17 @@
 #include "WindowsWindow.h"
 
 #include "Miriya/Log.h"
+#include "Miriya/Events/ApplicationEvent.h"
+#include "Miriya/Events/MouseEvent.h"
+#include "Miriya/Events/KeyEvent.h"
 
 namespace Miriya {
 
     static bool s_GLFWInitialized = false;
+
+    static void GLFWErrorCallback(int error, const char* description) {
+        MIR_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+    }
 
     Window* Window::Create(const WindowProps& props) {
         return new WindowsWindow(props);
@@ -29,8 +36,12 @@ namespace Miriya {
         if (!s_GLFWInitialized) {
             // TODO: glfwTerminate on system shutdown
             int success = glfwInit();  // want glfw to initialize
-            MIR_CORE_ASSERT(success, "Could not initialize GLFW!");
 
+            MIR_CORE_ASSERT(success, "Could not initialize GLFW!");
+            glfwSetErrorCallback([](int error, const char* description) {
+                MIR_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+            });
+            // glfwSetErrorCallback(GLFWErrorCallback);
             s_GLFWInitialized = true;
         }
 
@@ -38,7 +49,75 @@ namespace Miriya {
         glfwMakeContextCurrent(m_Window);
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
+
+        // set glfw callback
+        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+            WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+            data.Width = width;
+            data.Height = height;
+
+            WindowResizeEvent event(width, height);
+            data.EventCallback(event);
+        });
+
+        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+            WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+            WindowCloseEvent event;
+            data.EventCallback(event);
+        });
+
+        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+            WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+            switch (action) {
+                case GLFW_PRESS: {
+                    KeyPressedEvent event(key, 0);
+                    data.EventCallback(event);
+                    break;
+                }
+                case GLFW_RELEASE: {
+                    KeyReleasedEvent event(key);
+                    data.EventCallback(event);
+                    break;
+                }
+                case GLFW_REPEAT: {
+                    KeyPressedEvent event(key, 1);
+                    data.EventCallback(event);
+                    break;
+                }
+            }
+        });
+
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+            WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+            switch (action) {
+                case GLFW_PRESS: {
+                    MouseButtonPressedEvent event(button);
+                    data.EventCallback(event);
+                    break;
+                }
+                case GLFW_RELEASE: {
+                    MouseButtonReleasedEvent event(button);
+                    data.EventCallback(event);
+                    break;
+                }
+            }
+        });
+
+        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
+            WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+            MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
+            data.EventCallback(event);
+        });
+
+        glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
+            WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+            MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
+            data.EventCallback(event);
+        });
     }
+
 
     void WindowsWindow::Shutdown() {
         glfwDestroyWindow(m_Window);
