@@ -10,6 +10,9 @@ file(GLOB_RECURSE SOURCES
         src/*.cpp
 )
 
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
 # Define the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 

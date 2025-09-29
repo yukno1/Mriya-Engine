@@ -5,6 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if (MSVC)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+endif ()
+
 #option(BOX2D_BUILD_UNIT_TESTS "Build the Box2D unit tests" OFF)
 #option(BOX2D_BUILD_TESTBED "Build the Box2D testbed" OFF)
 #option(BOX2D_BUILD_DOCS "Build the Box2D documentation" OFF)
@@ -37,10 +42,15 @@ target_precompile_headers(${PROJECT_NAME} PUBLIC "src/mirpch.h")
 add_compile_definitions(MIR_PLATFORM_WINDOWS)
 add_compile_definitions(MIR_BUILD_DLL)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-        _CRT_SECURE_NO_WARNINGS
-        GLFW_INCLUDE_NONE
-)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/vendor/GLFW/lib/glfw3.dll"
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+
+#target_compile_definitions(${PROJECT_NAME} PRIVATE
+#        _CRT_SECURE_NO_WARNINGS
+#        GLFW_INCLUDE_NONE
+#)
 
 # Set include directories
 #target_include_directories(Miriya
@@ -55,7 +65,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         src
         vendor/spdlog/include
         vendor/GLFW/include
-        vendor/GLEW/include
 #        ${IncludeDir_Box2D}
 #        ${IncludeDir_filewatch}
 #        ${IncludeDir_Glad}up
@@ -71,53 +80,85 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 
 #message("IncludeDir_VulkanSDK: ${IncludeDir_VulkanSDK}")
-#
-#target_link_libraries(${PROJECT_NAME} PRIVATE
-        #box2d
-        #glad
-        #imgui
-        #yaml-cpp
-        #opengl32.lib
-        # ${Library_mono}
-#)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_WinSock}
-#            ${Library_WinMM}
-#            ${Library_WinVersion}
-#            ${Library_BCrypt}
-#            opengl32.lib
-            ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
+
+if(MSVC)
+
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_WinSock}
+                ${Library_WinMM}
+                ${Library_WinVersion}
+                ${Library_BCrypt}
+                opengl32.lib
+                ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
+        )
+    endif()
+
+    target_compile_options(${PROJECT_NAME} PRIVATE
+            $<$<COMPILE_LANGUAGE:CXX>:/EHsc>
     )
-endif()
 
-#target_compile_options(${PROJECT_NAME} PRIVATE
-#        $<$<COMPILE_LANGUAGE:CXX>:/EHsc>
-#)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
+        target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
+    #    target_link_libraries(${PROJECT_NAME} PRIVATE
+    #            ${Library_ShaderC_Debug}
+    #            ${Library_SPIRV_Cross_Debug}
+    #            ${Library_SPIRV_Cross_GLSL_Debug}
+    #    )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+    #    target_link_libraries(${PROJECT_NAME} PRIVATE
+    #            ${Library_ShaderC_Release}
+    #            ${Library_SPIRV_Cross_Release}
+    #            ${Library_SPIRV_Cross_GLSL_Release}
+    #    )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+    #    target_link_libraries(${PROJECT_NAME} PRIVATE
+    #            ${Library_ShaderC_Release}
+    #            ${Library_SPIRV_Cross_Release}
+    #            ${Library_SPIRV_Cross_GLSL_Release}
+    #    )
+    endif()
+else ()
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+#                ${Library_WinSock}
+#                ${Library_WinMM}
+#                ${Library_WinVersion}
+#                ${Library_BCrypt}
+#                opengl32.lib
+                ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
+        )
+    endif()
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
-#    target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_ShaderC_Debug}
-#            ${Library_SPIRV_Cross_Debug}
-#            ${Library_SPIRV_Cross_GLSL_Debug}
-#    )
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
-#    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_ShaderC_Release}
-#            ${Library_SPIRV_Cross_Release}
-#            ${Library_SPIRV_Cross_GLSL_Release}
-#    )
-elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
-#    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_ShaderC_Release}
-#            ${Library_SPIRV_Cross_Release}
-#            ${Library_SPIRV_Cross_GLSL_Release}
-#    )
-endif()
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
+        #    target_link_libraries(${PROJECT_NAME} PRIVATE
+        #            ${Library_ShaderC_Debug}
+        #            ${Library_SPIRV_Cross_Debug}
+        #            ${Library_SPIRV_Cross_GLSL_Debug}
+        #    )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+        #    target_link_libraries(${PROJECT_NAME} PRIVATE
+        #            ${Library_ShaderC_Release}
+        #            ${Library_SPIRV_Cross_Release}
+        #            ${Library_SPIRV_Cross_GLSL_Release}
+        #    )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+        #    target_link_libraries(${PROJECT_NAME} PRIVATE
+        #            ${Library_ShaderC_Release}
+        #            ${Library_SPIRV_Cross_Release}
+        #            ${Library_SPIRV_Cross_GLSL_Release}
+        #    )
+    endif()
+
+endif ()
