@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
+
+#include "Miriya/Events/Event.h"
 #include "Window.h"
-#include "Events/ApplicationEvent.h"
+#include "Miriya/Events/ApplicationEvent.h"
+#include "Miriya/LayerStack.h"
 
 namespace Miriya {
     class MIR_API Application {
@@ -14,11 +16,15 @@ namespace Miriya {
         void Run();
 
         void OnEvent(Event& e);
+
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* overlay);
     private:
         bool OnWindowClosed(WindowCloseEvent& e);
 
         std::unique_ptr<Window> m_Window;
         bool m_Running = true;
+        LayerStack m_LayerStack;
     };
 
     // To be defined in client
