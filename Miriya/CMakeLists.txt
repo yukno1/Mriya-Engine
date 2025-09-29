@@ -127,11 +127,11 @@ if(MSVC)
 else ()
     if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(${PROJECT_NAME} PRIVATE
-#                ${Library_WinSock}
-#                ${Library_WinMM}
-#                ${Library_WinVersion}
-#                ${Library_BCrypt}
-#                opengl32.lib
+                ${Library_WinSock}
+                ${Library_WinMM}
+                ${Library_WinVersion}
+                ${Library_BCrypt}
+                opengl32.lib
                 ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
         )
     endif()
