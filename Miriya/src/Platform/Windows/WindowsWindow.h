@@ -2,7 +2,9 @@
 
 #include "Miriya/Window.h"
 
-#include "glfw3.h"
+
+
+struct GLFWwindow;
 
 namespace Miriya {
 

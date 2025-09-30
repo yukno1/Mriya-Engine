@@ -10,6 +10,8 @@ if (MSVC)
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif ()
 
+add_subdirectory(vendor/GLAD)
+
 #option(BOX2D_BUILD_UNIT_TESTS "Build the Box2D unit tests" OFF)
 #option(BOX2D_BUILD_TESTBED "Build the Box2D testbed" OFF)
 #option(BOX2D_BUILD_DOCS "Build the Box2D documentation" OFF)
@@ -19,7 +21,7 @@ endif ()
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
         "src/*.cpp"
-#         "${CMAKE_SOURCE_DIR}/Sandbox/src/Sandbox.cpp"
+#        ${PROJECT_SOURCE_DIR}/vendor/GLAD/src/gl.c
 #        "vendor/stb_image/*.cpp"
 #        "vendor/glm/glm/*.inl"
 #        "vendor/ImGuizmo/ImGuizmo.cpp"
@@ -65,9 +67,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         src
         vendor/spdlog/include
         vendor/GLFW/include
+        ${IncludeDir_Glad}
+#        vendor/GLAD/include
 #        ${IncludeDir_Box2D}
 #        ${IncludeDir_filewatch}
-#        ${IncludeDir_Glad}up
 #        ${IncludeDir_ImGui}
 #        ${IncludeDir_glm}
 #        ${IncludeDir_stb_image}
@@ -81,6 +84,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 #message("IncludeDir_VulkanSDK: ${IncludeDir_VulkanSDK}")
 
+target_link_libraries(${PROJECT_NAME} PRIVATE
+#        box2d
+        glad
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a  # use prebuilt
+#        imgui
+#        yaml-cpp
+        # ${Library_mono}
+)
+
+
 
 if(MSVC)
 
@@ -91,7 +104,6 @@ if(MSVC)
                 ${Library_WinVersion}
                 ${Library_BCrypt}
                 opengl32.lib
-                ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
         )
     endif()
 
@@ -102,11 +114,11 @@ if(MSVC)
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
         target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
-    #    target_link_libraries(${PROJECT_NAME} PRIVATE
-    #            ${Library_ShaderC_Debug}
-    #            ${Library_SPIRV_Cross_Debug}
-    #            ${Library_SPIRV_Cross_GLSL_Debug}
-    #    )
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_ShaderC_Debug}
+                ${Library_SPIRV_Cross_Debug}
+                ${Library_SPIRV_Cross_GLSL_Debug}
+        )
     elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
         target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
         target_compile_options(${PROJECT_NAME} PRIVATE /O2)
@@ -125,6 +137,7 @@ if(MSVC)
     #    )
     endif()
 else ()
+
     if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(${PROJECT_NAME} PRIVATE
                 ${Library_WinSock}
@@ -132,7 +145,6 @@ else ()
                 ${Library_WinVersion}
                 ${Library_BCrypt}
                 opengl32.lib
-                ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a
         )
     endif()
 
