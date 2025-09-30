@@ -1,3 +1,6 @@
 [submodule "Miriya/vendor/spdlog"]
 	path = Miriya/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "Miriya/vendor/imgui"]
+	path = Miriya/vendor/imgui
+	url = https://github.com/ocornut/imgui.git

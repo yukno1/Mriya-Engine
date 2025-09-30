@@ -10,18 +10,22 @@ if (MSVC)
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif ()
 
-add_subdirectory(vendor/GLAD)
-
 #option(BOX2D_BUILD_UNIT_TESTS "Build the Box2D unit tests" OFF)
 #option(BOX2D_BUILD_TESTBED "Build the Box2D testbed" OFF)
 #option(BOX2D_BUILD_DOCS "Build the Box2D documentation" OFF)
 #option(BOX2D_USER_SETTINGS "Override Box2D settings with b2UserSettings.h" OFF)
 #option(BUILD_SHARED_LIBS "Build Box2D as a shared library" ON)
 
+# Dependencies
+#add_subdirectory(vendor/Box2D)
+#add_subdirectory(vendor/GLFW)
+add_subdirectory(vendor/GLAD)
+add_subdirectory(vendor/imgui)
+#add_subdirectory(vendor/yaml-cpp)
+
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
         "src/*.cpp"
-#        ${PROJECT_SOURCE_DIR}/vendor/GLAD/src/gl.c
 #        "vendor/stb_image/*.cpp"
 #        "vendor/glm/glm/*.inl"
 #        "vendor/ImGuizmo/ImGuizmo.cpp"
@@ -63,24 +67,25 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 #        ${CMAKE_CURRENT_SOURCE_DIR}/src
 #        ${CMAKE_SOURCE_DIR}/Miriya/vendor/spdlog/include
 #)
+
 target_include_directories(${PROJECT_NAME} PRIVATE
         src
         vendor/spdlog/include
-        vendor/GLFW/include
+        vendor
+        vendor/GLFW
         ${IncludeDir_Glad}
-#        vendor/GLAD/include
-#        ${IncludeDir_Box2D}
-#        ${IncludeDir_filewatch}
-#        ${IncludeDir_ImGui}
-#        ${IncludeDir_glm}
-#        ${IncludeDir_stb_image}
-#        ${IncludeDir_entt}
-#        ${IncludeDir_mono}
-#        ${IncludeDir_yaml_cpp}
-#        ${IncludeDir_ImGuizmo}
-#        ${IncludeDir_VulkanSDK}
+        #        vendor/GLAD/include
+        #        ${IncludeDir_Box2D}
+        #        ${IncludeDir_filewatch}
+        ${IncludeDir_ImGui}
+        #        ${IncludeDir_glm}
+        #        ${IncludeDir_stb_image}
+        #        ${IncludeDir_entt}
+        #        ${IncludeDir_mono}
+        #        ${IncludeDir_yaml_cpp}
+        #        ${IncludeDir_ImGuizmo}
+        #        ${IncludeDir_VulkanSDK}
 )
-
 
 #message("IncludeDir_VulkanSDK: ${IncludeDir_VulkanSDK}")
 
@@ -88,11 +93,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 #        box2d
         glad
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/lib/libglfw3dll.a  # use prebuilt
-#        imgui
+        imgui
 #        yaml-cpp
         # ${Library_mono}
 )
-
 
 
 if(MSVC)
