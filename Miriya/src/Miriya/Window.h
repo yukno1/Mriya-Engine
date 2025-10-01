@@ -35,6 +35,11 @@ namespace Miriya {
         virtual void SetVSync(bool enabled) = 0;
         virtual bool IsVSync() const = 0;
 
+        // return a glfw window
+        // expose this as api
+        // void means not necessary a glfw window
+        virtual void* GetNativeWindow() const = 0;
+
         static Window* Create(const WindowProps& props = WindowProps());
     };
 }
