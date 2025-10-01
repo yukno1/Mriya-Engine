@@ -23,7 +23,6 @@
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
-//  2025-09-18: Call platform_io.ClearRendererHandlers() on shutdown.
 //  2025-07-22: OpenGL: Add and call embedded loader shutdown during ImGui_ImplOpenGL3_Shutdown() to facilitate multiple init/shutdown cycles in same process. (#8792)
 //  2025-07-15: OpenGL: Set GL_UNPACK_ALIGNMENT to 1 before updating textures (#8802) + restore non-WebGL/ES update path that doesn't require a CPU-side copy.
 //  2025-06-11: OpenGL: Added support for ImGuiBackendFlags_RendererHasTextures, for dynamic font atlas. Removed ImGui_ImplOpenGL3_CreateFontsTexture() and ImGui_ImplOpenGL3_DestroyFontsTexture().
@@ -121,9 +120,9 @@
 #endif
 
 #include "mirpch.h"
-#include "imgui.h"
+#include "imgui/imgui.h"
 #ifndef IMGUI_DISABLE
-#include "ImGuiOpenGLRenderer.h"
+#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 #include <cstdio>
 #include <stdint.h>     // intptr_t
 #if defined(__APPLE__)
@@ -423,14 +422,11 @@ void    ImGui_ImplOpenGL3_Shutdown()
     ImGui_ImplOpenGL3_Data* bd = ImGui_ImplOpenGL3_GetBackendData();
     IM_ASSERT(bd != nullptr && "No renderer backend to shutdown, or already shutdown?");
     ImGuiIO& io = ImGui::GetIO();
-    ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
 
     ImGui_ImplOpenGL3_DestroyDeviceObjects();
-
     io.BackendRendererName = nullptr;
     io.BackendRendererUserData = nullptr;
     io.BackendFlags &= ~(ImGuiBackendFlags_RendererHasVtxOffset | ImGuiBackendFlags_RendererHasTextures);
-    platform_io.ClearRendererHandlers();
     IM_DELETE(bd);
 
 #ifdef IMGUI_IMPL_OPENGL_LOADER_IMGL3W

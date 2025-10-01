@@ -23,7 +23,7 @@ namespace Miriya {
 
         std::string ToString() const override {
             std::stringstream ss;
-            ss << "KeyPressEvent: " << m_Keycode << "(" << m_RepeatCount << " repeates)";
+            ss << "KeyPressedEvent: " << m_Keycode << "(" << m_RepeatCount << " repeates)";
             return ss.str();
         }
 
@@ -44,5 +44,18 @@ namespace Miriya {
         }
 
         EVENT_CLASS_TYPE(KeyReleased)
+    };
+
+    class MIR_API KeyTypedEvent : public KeyEvent {
+    public:
+        KeyTypedEvent(int keycode) : KeyEvent(keycode) {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "KeyTypedEvent: " << m_Keycode;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(KeyTyped)
     };
 }

@@ -1,11 +1,12 @@
 #include <Miriya.h>
+
 class ExampleLayer : public Miriya::Layer {
 public:
    ExampleLayer(): Layer("Example") {
    }
 
    void OnUpdate() override {
-      MIR_INFO("ExampleLayer::Update");
+      // MIR_INFO("ExampleLayer::Update");
    }
 
    void OnEvent(Miriya::Event& event) override {
