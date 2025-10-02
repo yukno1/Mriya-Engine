@@ -7,10 +7,19 @@ public:
 
    void OnUpdate() override {
       // MIR_INFO("ExampleLayer::Update");
+
+      // if (Miriya::Input::IsKeyPressed(MIR_KEY_TAB))
+      //    MIR_INFO();
    }
 
    void OnEvent(Miriya::Event& event) override {
-      MIR_TRACE("{0}", event.ToString());
+      // MIR_TRACE("{0}", event.ToString());
+      if (event.GetEventType() == Miriya::EventType::KeyPressed) {
+         auto e = static_cast<Miriya::KeyPressedEvent &>(event);
+         if (e.GetKeyCode() == MIR_KEY_TAB)
+            MIR_TRACE("Tab key is pressed");
+         MIR_TRACE("{0}", static_cast<char>(e.GetKeyCode()));
+      }
    }
 };
 

@@ -5,6 +5,11 @@
 #include "Miriya/Application.h"
 #include "Miriya/Log.h"
 #include "Miriya/Layer.h"
+
+#include "Miriya/Input.h"
+#include "Miriya/MouseButtonCodes.h"
+#include "Miriya/Keycodes.h"
+
 #include "Miriya/ImGui/ImGuiLayer.h"
 
 // --------Entry Point------------------
