@@ -16,18 +16,13 @@ endif ()
 #option(BOX2D_USER_SETTINGS "Override Box2D settings with b2UserSettings.h" OFF)
 #option(BUILD_SHARED_LIBS "Build Box2D as a shared library" ON)
 
-# Dependencies
-#add_subdirectory(vendor/Box2D)
-#add_subdirectory(vendor/GLFW)
-add_subdirectory(vendor/GLAD)
-add_subdirectory(vendor/imgui)
-#add_subdirectory(vendor/yaml-cpp)
+
 
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
         "src/*.cpp"
 #        "vendor/stb_image/*.cpp"
-#        "vendor/glm/glm/*.inl"
+        "vendor/glm/glm/*.inl"
 #        "vendor/ImGuizmo/ImGuizmo.cpp"
 )
 
@@ -36,7 +31,7 @@ file(GLOB_RECURSE MIRIYA_HEADERS
         "src/Events/*h"
         "include/*.h"
 #        "vendor/stb_image/*.h"
-#        "vendor/glm/glm/*.hpp"
+        "vendor/glm/glm/*.hpp"
 #        "vendor/ImGuizmo/ImGuizmo.h"
 )
 
@@ -74,17 +69,17 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         vendor
         vendor/GLFW
         ${IncludeDir_Glad}
-        #        vendor/GLAD/include
-        #        ${IncludeDir_Box2D}
-        #        ${IncludeDir_filewatch}
+#        vendor/GLAD/include
+#        ${IncludeDir_Box2D}
+#        ${IncludeDir_filewatch}
         ${IncludeDir_ImGui}
-        #        ${IncludeDir_glm}
-        #        ${IncludeDir_stb_image}
-        #        ${IncludeDir_entt}
-        #        ${IncludeDir_mono}
-        #        ${IncludeDir_yaml_cpp}
-        #        ${IncludeDir_ImGuizmo}
-        #        ${IncludeDir_VulkanSDK}
+        ${IncludeDir_glm}/glm
+#        ${IncludeDir_stb_image}
+#        ${IncludeDir_entt}
+#        ${IncludeDir_mono}
+#        ${IncludeDir_yaml_cpp}
+#        ${IncludeDir_ImGuizmo}
+#        ${IncludeDir_VulkanSDK}
 )
 
 #message("IncludeDir_VulkanSDK: ${IncludeDir_VulkanSDK}")
@@ -126,19 +121,19 @@ if(MSVC)
     elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
         target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
         target_compile_options(${PROJECT_NAME} PRIVATE /O2)
-    #    target_link_libraries(${PROJECT_NAME} PRIVATE
-    #            ${Library_ShaderC_Release}
-    #            ${Library_SPIRV_Cross_Release}
-    #            ${Library_SPIRV_Cross_GLSL_Release}
-    #    )
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_ShaderC_Release}
+                ${Library_SPIRV_Cross_Release}
+                ${Library_SPIRV_Cross_GLSL_Release}
+        )
     elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
         target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
         target_compile_options(${PROJECT_NAME} PRIVATE /O2)
-    #    target_link_libraries(${PROJECT_NAME} PRIVATE
-    #            ${Library_ShaderC_Release}
-    #            ${Library_SPIRV_Cross_Release}
-    #            ${Library_SPIRV_Cross_GLSL_Release}
-    #    )
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_ShaderC_Release}
+                ${Library_SPIRV_Cross_Release}
+                ${Library_SPIRV_Cross_GLSL_Release}
+        )
     endif()
 else ()
 

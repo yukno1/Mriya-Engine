@@ -20,10 +20,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/Miriya/vendor/spdlog/include
         ${CMAKE_SOURCE_DIR}/Miriya/src
         ${CMAKE_SOURCE_DIR}/Miriya/include
-#        ${CMAKE_SOURCE_DIR}/Miriya/vendor
+        ${CMAKE_SOURCE_DIR}/Miriya/vendor
 #        ${CMAKE_SOURCE_DIR}/Miriya/vendor/imgui
-#        ${CMAKE_SOURCE_DIR}/Miriya/vendor/Glad
+        ${IncludeDir_ImGui}
+        ${CMAKE_SOURCE_DIR}/Miriya/vendor/Glad
 #        ${IncludeDir_glm}
+        ${CMAKE_SOURCE_DIR}/Miriya/vendor/glm
 #        ${IncludeDir_entt}
 )
 
@@ -39,31 +41,57 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     )
 endif()
 
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
-#    target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_ShaderC_Debug}
-#            ${Library_SPIRV_Cross_Debug}
-#            ${Library_SPIRV_Cross_GLSL_Debug}
-#    )
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
-    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_ShaderC_Release}
-#            ${Library_SPIRV_Cross_Release}
-#            ${Library_SPIRV_Cross_GLSL_Release}
-#    )
-elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
-    target_compile_options(${PROJECT_NAME} PRIVATE /O2)
-#    target_link_libraries(${PROJECT_NAME} PRIVATE
-#            ${Library_ShaderC_Release}
-#            ${Library_SPIRV_Cross_Release}
-#            ${Library_SPIRV_Cross_GLSL_Release}
-#    )
-endif()
-
+if (MSVC)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
+        target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_ShaderC_Debug}
+                ${Library_SPIRV_Cross_Debug}
+                ${Library_SPIRV_Cross_GLSL_Debug}
+        )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_ShaderC_Release}
+                ${Library_SPIRV_Cross_Release}
+                ${Library_SPIRV_Cross_GLSL_Release}
+        )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+                ${Library_ShaderC_Release}
+                ${Library_SPIRV_Cross_Release}
+                ${Library_SPIRV_Cross_GLSL_Release}
+        )
+    endif()
+else ()
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DEBUG)
+        #    target_compile_options(${PROJECT_NAME} PRIVATE /Od /Zi)
+        #    target_link_libraries(${PROJECT_NAME} PRIVATE
+        #            ${Library_ShaderC_Debug}
+        #            ${Library_SPIRV_Cross_Debug}
+        #            ${Library_SPIRV_Cross_GLSL_Debug}
+        #    )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_RELEASE)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+        #    target_link_libraries(${PROJECT_NAME} PRIVATE
+        #            ${Library_ShaderC_Release}
+        #            ${Library_SPIRV_Cross_Release}
+        #            ${Library_SPIRV_Cross_GLSL_Release}
+        #    )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Dist")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE MIR_DIST)
+        target_compile_options(${PROJECT_NAME} PRIVATE /O2)
+        #    target_link_libraries(${PROJECT_NAME} PRIVATE
+        #            ${Library_ShaderC_Release}
+        #            ${Library_SPIRV_Cross_Release}
+        #            ${Library_SPIRV_Cross_GLSL_Release}
+        #    )
+    endif()
+endif ()
 
