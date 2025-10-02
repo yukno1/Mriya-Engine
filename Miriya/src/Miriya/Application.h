@@ -2,10 +2,12 @@
 
 #include "Core.h"
 
-#include "Miriya/Events/Event.h"
 #include "Window.h"
-#include "Miriya/Events/ApplicationEvent.h"
 #include "Miriya/LayerStack.h"
+#include "Miriya/Events/Event.h"
+#include "Miriya/Events/ApplicationEvent.h"
+
+#include "Miriya/ImGui/ImGuiLayer.h"
 
 namespace Miriya {
     class MIR_API Application {
@@ -26,6 +28,9 @@ namespace Miriya {
         bool OnWindowClosed(WindowCloseEvent& e);
 
         std::unique_ptr<Window> m_Window;
+        // imgui layer automatically added by Miriya runtime
+        ImGuiLayer* m_ImGuiLayer;
+
         bool m_Running = true;
         LayerStack m_LayerStack;
 
@@ -34,7 +39,7 @@ namespace Miriya {
 
     // To be defined in client
     Application* CreateApplication();
-}
+} // Miriya
 
 
 
