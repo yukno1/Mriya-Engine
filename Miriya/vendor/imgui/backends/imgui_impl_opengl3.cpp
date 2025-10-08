@@ -177,9 +177,11 @@
 //   Typically you would run: python3 ./gl3w_gen.py --output ../imgui/backends/imgui_impl_opengl3_loader.h --ref ../imgui/backends/imgui_impl_opengl3.cpp ./extra_symbols.txt
 // - You can temporarily use an unstripped version. See https://github.com/dearimgui/gl3w_stripped/releases
 // Changes to this backend using new APIs should be accompanied by a regenerated stripped loader version.
-#define IMGL3W_IMPL
-#define IMGUI_IMPL_OPENGL_LOADER_IMGL3W
-#include "imgui_impl_opengl3_loader.h"
+// #define IMGL3W_IMPL
+// #define IMGUI_IMPL_OPENGL_LOADER_IMGL3W
+// #include "imgui_impl_opengl3_loader.h"
+#define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+    #include <GLAD/include/glad/gl.h>
 #endif
 
 // Vertex arrays are not supported on ES2/WebGL1 unless Emscripten which uses an extension
@@ -510,7 +512,7 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data, int fb_wid
     };
     glUseProgram(bd->ShaderHandle);
     glUniform1i(bd->AttribLocationTex, 0);
-    glUniformMatrix4fv(bd->AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
+    glUniformMatrix4fv(bd->AttribLocationProjMtx, 1, GL_FALSE, (const GLfloat*)&ortho_projection[0][0]);
 
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
     if (bd->HasBindSampler)

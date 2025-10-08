@@ -1,5 +1,7 @@
 #include <Miriya.h>
 
+#include "imgui.h"
+
 class ExampleLayer : public Miriya::Layer {
 public:
    ExampleLayer(): Layer("Example") {
@@ -10,6 +12,13 @@ public:
 
       // if (Miriya::Input::IsKeyPressed(MIR_KEY_TAB))
       //    MIR_INFO();
+   }
+
+   void OnImGuiRender() override {
+      ImGui::Begin("Test");
+      ImGui::Text("Hello World!");
+      ImGui::ColorEdit4("", new float[4]);
+      ImGui::End();
    }
 
    void OnEvent(Miriya::Event& event) override {

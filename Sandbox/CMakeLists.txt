@@ -21,8 +21,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/Miriya/src
         ${CMAKE_SOURCE_DIR}/Miriya/include
         ${CMAKE_SOURCE_DIR}/Miriya/vendor
-#        ${CMAKE_SOURCE_DIR}/Miriya/vendor/imgui
-        ${IncludeDir_ImGui}
+        ${CMAKE_SOURCE_DIR}/Miriya/vendor/imgui
+#        ${IncludeDir_ImGui}
         ${CMAKE_SOURCE_DIR}/Miriya/vendor/Glad
 #        ${IncludeDir_glm}
         ${CMAKE_SOURCE_DIR}/Miriya/vendor/glm

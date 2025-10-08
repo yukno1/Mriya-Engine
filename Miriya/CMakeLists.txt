@@ -35,8 +35,8 @@ file(GLOB_RECURSE MIRIYA_HEADERS
 #        "vendor/ImGuizmo/ImGuizmo.h"
 )
 
-# Create the dynamic library
-add_library(Miriya SHARED ${MIRIYA_SOURCES} ${MIRIYA_HEADERS})
+# Create the static library
+add_library(Miriya STATIC ${MIRIYA_SOURCES} ${MIRIYA_HEADERS})
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC "src/mirpch.h")
 
