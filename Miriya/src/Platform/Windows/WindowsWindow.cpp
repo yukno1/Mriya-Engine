@@ -6,7 +6,9 @@
 #include "Miriya/Events/MouseEvent.h"
 #include "Miriya/Events/KeyEvent.h"
 
-#include "glad/gl.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+
+// #include "glad/gl.h"
 #include "glfw3.h"
 
 namespace Miriya {
@@ -49,9 +51,10 @@ namespace Miriya {
         }
 
         m_Window = glfwCreateWindow(static_cast<int>(props.Width), static_cast<int>(props.Height), m_Data.Title.c_str(), nullptr, nullptr);
-        glfwMakeContextCurrent(m_Window);
-        int status = gladLoadGL(glfwGetProcAddress);
-        MIR_CORE_ASSERT(status, "Failed to initialize GLAD!");
+
+        m_Context = new OpenGLContext(m_Window);
+        m_Context->Init();
+
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
 
@@ -136,7 +139,8 @@ namespace Miriya {
 
     void WindowsWindow::OnUpdate() {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffers();
+
     }
 
     void WindowsWindow::SetVSync(bool enabled) {

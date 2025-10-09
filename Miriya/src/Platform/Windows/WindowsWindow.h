@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Miriya/Window.h"
-
-
+#include "Miriya/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
@@ -29,6 +28,7 @@ namespace Miriya {
         virtual void Shutdown();
 
         GLFWwindow* m_Window;
+        GraphicsContext* m_Context;
 
         // might be requested when glfw callback
         // group window-specific data, so no need to return whole class
