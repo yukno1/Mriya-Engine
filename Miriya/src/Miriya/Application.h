@@ -9,6 +9,8 @@
 
 #include "Miriya/ImGui/ImGuiLayer.h"
 
+#include "Renderer/Shader.h"
+
 namespace Miriya {
     class MIR_API Application {
     public:
@@ -37,6 +39,7 @@ namespace Miriya {
         static Application* s_Instance;
 
         unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+        std::unique_ptr<Shader> m_Shader;
     };
 
     // To be defined in client
