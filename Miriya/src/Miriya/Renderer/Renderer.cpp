@@ -3,4 +3,4 @@
 
 namespace Miriya {
     RendererAPI Renderer::s_RendererAPI = RendererAPI::OpenGL;
-}
+} // Miriya

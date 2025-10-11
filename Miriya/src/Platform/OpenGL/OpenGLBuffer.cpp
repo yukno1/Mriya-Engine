@@ -11,6 +11,8 @@ namespace Miriya {
     OpenGLVertexBuffer::OpenGLVertexBuffer(float *vertices, uint32_t size) {
         glCreateBuffers(1, &m_RendererID);
         glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+        // static draw means we don't need to update the buffer
+        // not streaming
         glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
     }
 
