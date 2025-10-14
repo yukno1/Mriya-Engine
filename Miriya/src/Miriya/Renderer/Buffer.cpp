@@ -8,8 +8,8 @@
 namespace Miriya {
     VertexBuffer * VertexBuffer::Create(float *vertices, uint32_t size) {
         switch (Renderer::GetAPI()) {
-            case RendererAPI::None: MIR_CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
-            case RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size);
+            case RendererAPI::API::None: MIR_CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+            case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size);
         }
         MIR_CORE_ASSERT(false, "Unknown RendererAPI!");
         return nullptr;
@@ -17,8 +17,8 @@ namespace Miriya {
 
     IndexBuffer * IndexBuffer::Create(uint32_t *indices, uint32_t count) {
         switch (Renderer::GetAPI()) {
-            case RendererAPI::None: MIR_CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
-            case RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, count);
+            case RendererAPI::API::None: MIR_CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+            case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, count);
         }
         MIR_CORE_ASSERT(false, "Unknown RendererAPI!");
         return nullptr;

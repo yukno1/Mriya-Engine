@@ -2,8 +2,8 @@
 #include "Miriya/Application.h"
 
 #include "Miriya/Log.h"
-#include "GLAD/gl.h"
-#include <GLFW/glfw3.h>
+
+#include "Miriya/Renderer/Renderer.h"
 
 #include "Miriya/Input.h"
 
@@ -156,18 +156,24 @@ namespace Miriya {
 
     void Application::Run() {
         while (m_Running) {
-            glClearColor(.1f, .1f, .1f, 1);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // high-level
+            RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+            RenderCommand::Clear();
+
+            // contain all information about the scene
+            // camera, light, environment, ...
+            Renderer::BeginScene();
 
             m_Shader2->Bind();
-            m_SquareVA->Bind();
-            glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+            Renderer::Submit(m_SquareVA); // able to overload: submit many types
 
             m_Shader->Bind();
-            // no need explicitly bind vertex array b/c bound in constructor
-            // a white triangle doesn't need a shader
-            m_VertexArray->Bind();
-            glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+            Renderer::Submit(m_VertexArray);
+
+            Renderer::EndScene();
+
+            // Renderer::Flush();
 
             for (Layer *layer: m_LayerStack)
                 layer->OnUpdate();
