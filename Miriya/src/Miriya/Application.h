@@ -12,6 +12,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
+#include "Renderer/OrthographicCamera.h"
 
 namespace Miriya {
     class MIR_API Application {
@@ -38,13 +39,15 @@ namespace Miriya {
         bool m_Running = true;
         LayerStack m_LayerStack;
 
-        static Application* s_Instance;
-
         std::shared_ptr<Shader> m_Shader;
         std::shared_ptr<VertexArray> m_VertexArray;
 
         std::shared_ptr<Shader> m_Shader2;
         std::shared_ptr<VertexArray> m_SquareVA;
+
+        OrthographicCamera m_Camera;
+
+        static Application* s_Instance;
     };
 
     // To be defined in client

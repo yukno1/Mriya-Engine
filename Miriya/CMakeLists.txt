@@ -73,7 +73,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 #        ${IncludeDir_Box2D}
 #        ${IncludeDir_filewatch}
         ${IncludeDir_ImGui}
-        ${IncludeDir_glm}/glm
+#        ${IncludeDir_glm}
+        vendor/glm
 #        ${IncludeDir_stb_image}
 #        ${IncludeDir_entt}
 #        ${IncludeDir_mono}
