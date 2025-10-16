@@ -12,8 +12,19 @@
 
 #include "Miriya/ImGui/ImGuiLayer.h"
 
-// --------Entry Point------------------
+// --------Renderer Related--------------------
+#include "Miriya/Renderer/Renderer.h"
+#include "Miriya/Renderer/RenderCommand.h"
+
+#include "Miriya/Renderer/Buffer.h"
+#include "Miriya/Renderer/Shader.h"
+#include "Miriya/Renderer/VertexArray.h"
+
+#include "Miriya/Renderer/OrthographicCamera.h"
+// ---------------------------------------------
+
+// --------Entry Point--------------------------
 #include "Miriya/EntryPoint.h"
-// -------------------------------------
+// ---------------------------------------------
 
 
