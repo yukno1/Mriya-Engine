@@ -7,12 +7,9 @@
 #include "Miriya/Events/Event.h"
 #include "Miriya/Events/ApplicationEvent.h"
 
-#include "Miriya/ImGui/ImGuiLayer.h"
+#include "Miriya/Core/Timestep.h"
 
-#include "Renderer/Shader.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/OrthographicCamera.h"
+#include "Miriya/ImGui/ImGuiLayer.h"
 
 namespace Miriya {
     class MIR_API Application {
@@ -38,6 +35,9 @@ namespace Miriya {
 
         bool m_Running = true;
         LayerStack m_LayerStack;
+
+        // Timestep m_Timestep;
+        float m_LastFrameTime = 0.0f;
 
         static Application* s_Instance;
     };

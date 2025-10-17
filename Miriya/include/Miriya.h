@@ -6,6 +6,8 @@
 #include "Miriya/Layer.h"
 #include "Miriya/Log.h"
 
+#include "Miriya/Core/Timestep.h"
+
 #include "Miriya/Input.h"
 #include "Miriya/Keycodes.h"
 #include "Miriya/MouseButtonCodes.h"

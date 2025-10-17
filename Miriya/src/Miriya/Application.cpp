@@ -7,6 +7,8 @@
 
 #include "Miriya/Input.h"
 
+#include <GLFW/glfw3.h>
+
 
 namespace Miriya {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -59,10 +61,13 @@ namespace Miriya {
         while (m_Running) {
             // main application loop
 
+            auto time = static_cast<float>(glfwGetTime());  //TODO: Platform::GetTime()
+            Timestep timestep = time - m_LastFrameTime;
+            m_LastFrameTime = time;
 
 
             for (Layer *layer: m_LayerStack)
-                layer->OnUpdate();
+                layer->OnUpdate(timestep);
 
             // TODO: do on render thread
             m_ImGuiLayer->Begin();

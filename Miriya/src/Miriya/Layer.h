@@ -4,6 +4,7 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Core/Timestep.h"
 
 namespace Miriya {
 
@@ -14,7 +15,7 @@ namespace Miriya {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep timestep) {}
         virtual void OnEvent(Event& event) {}
         virtual void OnImGuiRender() {}
 
