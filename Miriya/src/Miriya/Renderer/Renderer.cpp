@@ -15,9 +15,11 @@ namespace Miriya {
     }
 
     // submit into render queue
-    void Renderer::Submit(const std::shared_ptr<Shader> &shader, const std::shared_ptr<VertexArray> &vertexArray) {
+    void Renderer::Submit(const std::shared_ptr<Shader> &shader, const std::shared_ptr<VertexArray> &vertexArray, const glm::mat4 &transform) {
         shader->Bind();
         shader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+        // submit per object; queue
+        shader->UploadUniformMat4("u_Transform", transform);
 
         vertexArray->Bind();
         // just render command; can't do multiple things
