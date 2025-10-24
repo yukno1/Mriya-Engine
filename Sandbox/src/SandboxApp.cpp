@@ -6,7 +6,7 @@
 class ExampleLayer : public Miriya::Layer {
 public:
     ExampleLayer()
-        : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_SquarePosition(0.0f) {
+        : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f) {
         m_VertexArray.reset(Miriya::VertexArray::Create());
 
         float vertices[3 * 7] = {
@@ -86,7 +86,7 @@ public:
 
         m_Shader.reset(new Miriya::Shader(vertexSrc, fragmentSrc));
 
-        std::string vertexSrc2 = R"(
+        std::string flatColorShaderVertexSrc = R"(
             #version 330 core
             layout(location = 0) in vec3 a_Position;
 
@@ -101,18 +101,20 @@ public:
             }
         )";
 
-        std::string fragmentSrc2 = R"(
+        std::string flatColorShaderFragmentSrc = R"(
             #version 330 core
             layout(location = 0) out vec4 color;
 
             in vec3 v_Position;
 
+            uniform vec4 u_Color;
+
             void main() {
-                color = vec4(0.2, 0.3, 0.8, 1.0);
+                color = u_Color;
             }
         )";
 
-        m_Shader2.reset(new Miriya::Shader(vertexSrc2, fragmentSrc2));
+        m_flatColorShader.reset(new Miriya::Shader(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
     }
 
     void OnUpdate(Miriya::Timestep timestep) override {
@@ -138,20 +140,6 @@ public:
             m_CameraRotation -= m_CameraRotationSpeed* timestep;
         }
 
-        // if (Miriya::Input::IsKeyPressed(MIR_KEY_J)) {
-        //     m_SquarePosition.x += m_SquareMoveSpeed * timestep;
-        // }
-        // else if (Miriya::Input::IsKeyPressed(MIR_KEY_L)) {
-        //     m_SquarePosition.x -= m_SquareMoveSpeed * timestep;
-        // }
-        //
-        // if (Miriya::Input::IsKeyPressed(MIR_KEY_I)) {
-        //     m_SquarePosition.y += m_SquareMoveSpeed * timestep;
-        // }
-        // else if (Miriya::Input::IsKeyPressed(MIR_KEY_K)) {
-        //     m_SquarePosition.y -= m_SquareMoveSpeed * timestep;
-        // }
-
         // high-level
         Miriya::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         Miriya::RenderCommand::Clear();
@@ -165,11 +153,18 @@ public:
 
         static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
+        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+
         for ( int y {0}; y < 20; ++y) {
             for (int x {0}; x < 20; ++x) {
                 glm::vec3 pos {x * 0.11f, y * 0.11f, 0.0f};
                 glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-                Miriya::Renderer::Submit(m_Shader2, m_SquareVA, transform); // able to overload: submit many types
+                if (x % 2 == 0)
+                    m_flatColorShader->UploadUniformFloat4("u_Color", redColor);
+                else
+                    m_flatColorShader->UploadUniformFloat4("u_Color", blueColor);
+                Miriya::Renderer::Submit(m_flatColorShader, m_SquareVA, transform); // able to overload: submit many types
             }
         }
 
@@ -188,7 +183,7 @@ private:
     std::shared_ptr<Miriya::Shader> m_Shader;
     std::shared_ptr<Miriya::VertexArray> m_VertexArray;
 
-    std::shared_ptr<Miriya::Shader> m_Shader2;
+    std::shared_ptr<Miriya::Shader> m_flatColorShader;
     std::shared_ptr<Miriya::VertexArray> m_SquareVA;
 
     Miriya::OrthographicCamera m_Camera;
