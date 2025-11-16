@@ -1,21 +1,21 @@
 #pragma once
 
 #include <string>
-#include <glm/glm.hpp>
 
 namespace Miriya {
     class Shader {
     public:
-        Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
-        ~Shader();
+        // Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        virtual ~Shader() = default;
 
         // In the future, want to have subclasses; Implemented per API; so need to be virtual
-        void Bind() const;
-        void Unbind() const; // for debugging purposes
+        virtual void Bind() const = 0;
+        virtual void Unbind() const = 0; // for debugging purposes
 
-        void UploadUniformFloat4(const std::string &name, const glm::vec4& values);
-        void UploadUniformMat4(const std::string &name, const glm::mat4& matrix);
-    private:
-        uint32_t m_RendererID;
+        // not want to expose these
+        // void UploadUniformFloat4(const std::string &name, const glm::vec4& values);
+        // void UploadUniformMat4(const std::string &name, const glm::mat4& matrix);
+
+        static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
     };
 } // Miriya
