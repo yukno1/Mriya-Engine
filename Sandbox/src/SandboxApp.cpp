@@ -2,8 +2,6 @@
 
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "imgui.h"
-// #include "glm/gtc/matrix_transform.hpp"
-// #include "glm/gtc/type_ptr.inl"
 #include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Miriya::Layer {
@@ -18,7 +16,7 @@ public:
             0.0f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
         };
 
-        std::shared_ptr<Miriya::VertexBuffer> vertexBuffer;
+        Miriya::Ref<Miriya::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(Miriya::VertexBuffer::Create(vertices, sizeof(vertices)));
         Miriya::BufferLayout layout = {
             {Miriya::ShaderDataType::Float3, "a_Position"},
@@ -29,7 +27,7 @@ public:
         m_VertexArray->AddVertexBuffer(vertexBuffer);
 
         uint32_t indices[3] = {0, 1, 2};
-        std::shared_ptr<Miriya::IndexBuffer> indexBuffer;
+        Miriya::Ref<Miriya::IndexBuffer> indexBuffer;
         indexBuffer.reset(Miriya::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
@@ -42,7 +40,7 @@ public:
             -0.5f, 0.5f, 0.0f,
         };
 
-        std::shared_ptr<Miriya::VertexBuffer> squareVB;
+        Miriya::Ref<Miriya::VertexBuffer> squareVB;
         squareVB.reset(Miriya::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 
         squareVB->SetLayout({
@@ -51,7 +49,7 @@ public:
         m_SquareVA->AddVertexBuffer(squareVB);
 
         uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
-        std::shared_ptr<Miriya::IndexBuffer> squareIB;
+        Miriya::Ref<Miriya::IndexBuffer> squareIB;
         squareIB.reset(Miriya::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
         m_SquareVA->SetIndexBuffer(squareIB);
 
@@ -192,11 +190,11 @@ public:
     void OnEvent(Miriya::Event& event) override {
     }
 private:
-    std::shared_ptr<Miriya::Shader> m_Shader;
-    std::shared_ptr<Miriya::VertexArray> m_VertexArray;
+    Miriya::Ref<Miriya::Shader> m_Shader;
+    Miriya::Ref<Miriya::VertexArray> m_VertexArray;
 
-    std::shared_ptr<Miriya::Shader> m_FlatColorShader;
-    std::shared_ptr<Miriya::VertexArray> m_SquareVA;
+    Miriya::Ref<Miriya::Shader> m_FlatColorShader;
+    Miriya::Ref<Miriya::VertexArray> m_SquareVA;
 
     Miriya::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
@@ -204,9 +202,6 @@ private:
 
     float m_CameraRotation {0.0f};
     float m_CameraRotationSpeed {180.0f};
-
-    // glm::vec3 m_SquarePosition;
-    // float m_SquareMoveSpeed {1.0f};
 
     glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 };
