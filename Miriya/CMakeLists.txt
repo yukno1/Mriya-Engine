@@ -21,7 +21,7 @@ endif ()
 # Collect source files
 file(GLOB_RECURSE MIRIYA_SOURCES
         "src/*.cpp"
-#        "vendor/stb_image/*.cpp"
+        "vendor/stb_image/*.cpp"
         "vendor/glm/glm/*.inl"
 #        "vendor/ImGuizmo/ImGuizmo.cpp"
 )
@@ -30,7 +30,7 @@ file(GLOB_RECURSE MIRIYA_HEADERS
         "src/*.h"
         "src/Events/*h"
         "include/*.h"
-#        "vendor/stb_image/*.h"
+        "vendor/stb_image/*.h"
         "vendor/glm/glm/*.hpp"
 #        "vendor/ImGuizmo/ImGuizmo.h"
 )
@@ -75,7 +75,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${IncludeDir_ImGui}
 #        ${IncludeDir_glm}
         vendor/glm
-#        ${IncludeDir_stb_image}
+        vendor/stb_image
 #        ${IncludeDir_entt}
 #        ${IncludeDir_mono}
 #        ${IncludeDir_yaml_cpp}

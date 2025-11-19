@@ -33,11 +33,11 @@ public:
 
         m_SquareVA.reset(Miriya::VertexArray::Create());
 
-        float squareVertices[3 * 4] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
+        float squareVertices[5 * 4] = {
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f
         };
 
         Miriya::Ref<Miriya::VertexBuffer> squareVB;
@@ -45,6 +45,7 @@ public:
 
         squareVB->SetLayout({
             {Miriya::ShaderDataType::Float3, "a_Position"},
+            {Miriya::ShaderDataType::Float2, "a_TexCoord"}
         });
         m_SquareVA->AddVertexBuffer(squareVB);
 
@@ -116,6 +117,43 @@ public:
         )";
 
         m_FlatColorShader.reset(Miriya::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+
+        std::string textureShaderVertexSrc = R"(
+            #version 460 core
+
+            layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec2 a_TexCoord;
+
+            uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
+
+            out vec2 v_TexCoord;
+
+            void main() {
+                v_TexCoord = a_TexCoord;
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position.x, a_Position.y, a_Position.z, 1.0);
+            }
+        )";
+
+        std::string textureShaderFragmentSrc = R"(
+            #version 460 core
+            layout(location = 0) out vec4 color;
+
+            in vec2 v_TexCoord;
+
+            uniform sampler2D u_Texture;
+
+            void main() {
+                color = texture(u_Texture, v_TexCoord);
+            }
+        )";
+
+        m_TextureShader.reset(Miriya::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+        m_Texture = Miriya::Texture2D::Create("assets/textures/Checkerboard.png");
+
+        std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_TextureShader)->Bind();
+        std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
     }
 
     void OnUpdate(Miriya::Timestep timestep) override {
@@ -154,9 +192,6 @@ public:
 
         static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-        // glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
-        // glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
-
         std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_FlatColorShader)->Bind();
         std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
@@ -164,15 +199,15 @@ public:
             for (int x {0}; x < 20; ++x) {
                 glm::vec3 pos {x * 0.11f, y * 0.11f, 0.0f};
                 glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-                // if (x % 2 == 0)
-                //     m_FlatColorShader->UploadUniformFloat4("u_Color", redColor);
-                // else
-                //     m_FlatColorShader->UploadUniformFloat4("u_Color", blueColor);
                 Miriya::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform); // able to overload: submit many types
             }
         }
 
-        Miriya::Renderer::Submit(m_Shader, m_VertexArray);
+        m_Texture->Bind();
+        Miriya::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+        // triangle
+        // Miriya::Renderer::Submit(m_Shader, m_VertexArray);
 
         Miriya::Renderer::EndScene();
 
@@ -193,8 +228,10 @@ private:
     Miriya::Ref<Miriya::Shader> m_Shader;
     Miriya::Ref<Miriya::VertexArray> m_VertexArray;
 
-    Miriya::Ref<Miriya::Shader> m_FlatColorShader;
+    Miriya::Ref<Miriya::Shader> m_FlatColorShader, m_TextureShader;
     Miriya::Ref<Miriya::VertexArray> m_SquareVA;
+
+    Miriya::Ref<Miriya::Texture2D> m_Texture;
 
     Miriya::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;

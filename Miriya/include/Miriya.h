@@ -20,6 +20,7 @@
 
 #include "Miriya/Renderer/Buffer.h"
 #include "Miriya/Renderer/Shader.h"
+#include "Miriya/Renderer/Texture.h"
 #include "Miriya/Renderer/VertexArray.h"
 
 #include "Miriya/Renderer/OrthographicCamera.h"
