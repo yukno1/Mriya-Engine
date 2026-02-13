@@ -32,5 +32,5 @@ add_subdirectory(Miriya)
 # Misc
 add_subdirectory(Sandbox)
 
-
+add_compile_options(/source-charset:utf-8 /execution-charset:utf-8)
 

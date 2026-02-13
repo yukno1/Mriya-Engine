@@ -5,7 +5,7 @@
 namespace Miriya {
     class OpenGLTexture2D : public Texture2D {
     public:
-        explicit OpenGLTexture2D(const std::string& path);
+        OpenGLTexture2D(const std::string& path);
         virtual ~OpenGLTexture2D();
 
         uint32_t GetWidth() const override {return m_Width;}

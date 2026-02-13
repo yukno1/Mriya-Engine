@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 4.2.3)
 project(Miriya)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -42,6 +42,7 @@ target_precompile_headers(${PROJECT_NAME} PUBLIC "src/mirpch.h")
 
 add_compile_definitions(MIR_PLATFORM_WINDOWS)
 add_compile_definitions(MIR_BUILD_DLL)
+add_compile_definitions(MIR_ENABLE_ASSERTS)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Miriya/Core.h"
 #include "spdlog/spdlog.h"

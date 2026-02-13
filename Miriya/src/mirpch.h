@@ -18,3 +18,6 @@
     #include <Windows.h>
 
 #endif
+
+// Include core logging functionality
+#include "Miriya/Log.h"

@@ -89,7 +89,7 @@ public:
         m_Shader.reset(Miriya::Shader::Create(vertexSrc, fragmentSrc));
 
         std::string flatColorShaderVertexSrc = R"(
-            #version 330 core
+            #version 460 core
             layout(location = 0) in vec3 a_Position;
 
             uniform mat4 u_ViewProjection;
@@ -104,7 +104,7 @@ public:
         )";
 
         std::string flatColorShaderFragmentSrc = R"(
-            #version 330 core
+            #version 460 core
             layout(location = 0) out vec4 color;
 
             in vec3 v_Position;
@@ -131,12 +131,13 @@ public:
 
             void main() {
                 v_TexCoord = a_TexCoord;
-                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position.x, a_Position.y, a_Position.z, 1.0);
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
 
         std::string textureShaderFragmentSrc = R"(
             #version 460 core
+
             layout(location = 0) out vec4 color;
 
             in vec2 v_TexCoord;
@@ -150,7 +151,7 @@ public:
 
         m_TextureShader.reset(Miriya::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 
-        m_Texture = Miriya::Texture2D::Create("assets/textures/Checkerboard.png");
+        m_Texture = Miriya::Texture2D::Create("../../Sandbox/assets/textures/Checkerboard.png");
 
         std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_TextureShader)->Bind();
         std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
@@ -210,8 +211,6 @@ public:
         // Miriya::Renderer::Submit(m_Shader, m_VertexArray);
 
         Miriya::Renderer::EndScene();
-
-        // Renderer::Flush();
     }
 
     void OnImGuiRender() override {
