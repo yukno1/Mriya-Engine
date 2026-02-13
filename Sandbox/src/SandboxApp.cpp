@@ -152,6 +152,7 @@ public:
         m_TextureShader.reset(Miriya::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 
         m_Texture = Miriya::Texture2D::Create("../../Sandbox/assets/textures/Checkerboard.png");
+        m_ChernoLogoTexture = Miriya::Texture2D::Create("../../Sandbox/assets/textures/ChernoLogo.png");
 
         std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_TextureShader)->Bind();
         std::dynamic_pointer_cast<Miriya::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
@@ -206,6 +207,8 @@ public:
 
         m_Texture->Bind();
         Miriya::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+        m_ChernoLogoTexture->Bind();
+        Miriya::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
         // triangle
         // Miriya::Renderer::Submit(m_Shader, m_VertexArray);
@@ -230,7 +233,7 @@ private:
     Miriya::Ref<Miriya::Shader> m_FlatColorShader, m_TextureShader;
     Miriya::Ref<Miriya::VertexArray> m_SquareVA;
 
-    Miriya::Ref<Miriya::Texture2D> m_Texture;
+    Miriya::Ref<Miriya::Texture2D> m_Texture, m_ChernoLogoTexture;
 
     Miriya::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;

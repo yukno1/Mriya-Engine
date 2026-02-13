@@ -7,6 +7,10 @@ namespace Miriya {
 
     Renderer::SceneData *Renderer::m_SceneData = new Renderer::SceneData;
 
+    void Renderer::Init() {
+         RenderCommand::Init();
+    }
+
     // make sure shader gets right uniforms
     // environment map; cube map; camera; light; material; model; etc
     void Renderer::BeginScene(OrthographicCamera &camera) {

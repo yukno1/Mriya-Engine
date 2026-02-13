@@ -97,7 +97,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 
 if(MSVC)
-
     if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(${PROJECT_NAME} PRIVATE
                 ${Library_WinSock}
